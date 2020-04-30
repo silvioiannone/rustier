@@ -1,0 +1,15 @@
+[package]
+name = "rustier"
+version = "0.1.0"
+authors = ["Silvio Iannone"]
+edition = "2018"
+description = "A library for quickly creating terminal UIs"
+keywords = ["tui"]
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bresenham = "0.1.1"
+ctrlc = "3.1.4"
+termion = "1.5.5"
