@@ -42,8 +42,9 @@ impl Interface {
     }
 
     /// Add a component.
-    pub fn add(&mut self, component: Box<dyn Component>) {
+    pub fn add(&mut self, component: Box<dyn Component>) -> &mut Self {
         self.components.push(component);
+        self
     }
 
     /// Draw the interface.

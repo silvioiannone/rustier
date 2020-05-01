@@ -2,13 +2,13 @@
 //! Canvas.
 //!
 
-use termion;
 use std::fmt;
 use std::fmt::{Write, Display, Formatter};
 
 use crate::interface::Cell;
 use crate::interface::Coordinate;
 use crate::interface::tools::{Line, Tool, Rectangle, Text};
+use crate::terminal::Terminal;
 
 /// A canvas is where a component is allowed to be displayed.
 #[derive(Debug)]
@@ -104,7 +104,7 @@ impl Canvas {
 impl Default for Canvas {
     // Create a canvas with default values.
     fn default() -> Self {
-        let size = termion::terminal_size().unwrap();
+        let size = Terminal::size();
         println!("{:?}", size);
 
         Self::new(size.0, size.1)

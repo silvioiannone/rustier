@@ -11,5 +11,5 @@ license = "MIT"
 
 [dependencies]
 bresenham = "0.1.1"
+crossterm = "0.17.3"
 ctrlc = "3.1.4"
-termion = "1.5.5"

@@ -2,14 +2,8 @@
 //! Terminal interface.
 //!
 
-use std::io::{stdout, Write, Stdout};
-
-macro_rules! terminal_write {
-    ($self:ident, $($arg:tt)*) => {
-        $self.output.write_fmt(format_args!($($arg)*)).unwrap();
-        $self.output.flush().unwrap();
-    }
-}
+use std::io::{stdout, Stdout, Write};
+use crossterm::{execute, terminal, cursor};
 
 /// A terminal.
 pub struct Terminal {
@@ -27,7 +21,7 @@ impl Terminal {
 
     /// Clear the terminal.
     pub fn clear(&mut self) {
-        terminal_write!(self, "{}", termion::clear::All);
+        execute!(self.output, terminal::Clear(terminal::ClearType::All)).unwrap();
     }
 
     /// Flush the output buffer.
@@ -37,20 +31,21 @@ impl Terminal {
 
     /// Hide the cursor.
     pub fn hide_cursor(&mut self) {
-        terminal_write!(self, "{}", termion::cursor::Hide);
+        execute!(self.output, cursor::Hide).unwrap();
     }
 
     /// Move the cursor to the given position.
-    pub fn move_cursor(&mut self, x: usize, y: usize) {
-        terminal_write!(
-            self,
-            "{}",
-            termion::cursor::Goto((x + 1) as u16, (y + 1) as u16)
-        );
+    pub fn move_cursor(&mut self, x: u16, y: u16) {
+        execute!(self.output, cursor::MoveTo(x, y)).unwrap();
     }
 
     /// Show the cursor.
     pub fn show_cursor(&mut self) {
-        terminal_write!(self, "{}", termion::cursor::Show);
+        execute!(self.output, cursor::Show).unwrap();
+    }
+
+    /// Get the terminal size.
+    pub fn size() -> (u16, u16) {
+        terminal::size().unwrap()
     }
 }
