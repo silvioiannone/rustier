@@ -26,18 +26,18 @@ use crate::terminal::Terminal;
 use std::io::Write;
 
 /// An interface containing all the components that are displayed on the screen.
-pub struct Interface {
+pub struct Interface<'a> {
     components: Vec<Box<dyn Component>>,
-    terminal: Terminal
+    terminal: &'a mut Terminal
 }
 
 /// Interface's implementation.
-impl Interface {
+impl<'a> Interface<'a> {
     /// Create a new interface.
-    pub fn new(terminal: Terminal) -> Self {
+    pub fn new(terminal: &'a mut Terminal) -> Self {
         Self {
             components: vec![],
-            terminal
+            terminal: terminal
         }
     }
 
@@ -49,6 +49,14 @@ impl Interface {
 
     /// Draw the interface.
     pub fn draw(&mut self) {
+        loop {
+            self.terminal.event_handler.handle();
+            self.present();
+        }
+    }
+
+    /// Present the canvas on the screen.
+    fn present(&mut self) {
         let canvas = &mut self.make_canvas();
 
         for component in self.components.iter() {
@@ -63,7 +71,6 @@ impl Interface {
 
     /// Reset and prepare for a new frame.
     fn reset(&mut self) {
-        &self.terminal.clear();
         &self.terminal.move_cursor(0, 0);
     }
 

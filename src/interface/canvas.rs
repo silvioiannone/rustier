@@ -105,8 +105,6 @@ impl Default for Canvas {
     // Create a canvas with default values.
     fn default() -> Self {
         let size = Terminal::size();
-        println!("{:?}", size);
-
         Self::new(size.0, size.1)
     }
 }
