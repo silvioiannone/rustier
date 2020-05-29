@@ -1,13 +1,12 @@
 //!
 //! Event handler.
 //!
-
 use crossterm::event::{poll, read, Event, KeyCode, KeyEvent, KeyModifiers};
 use std::time::Duration;
 use std::collections::HashMap;
 
 /// A handler function.
-type Handler = Box<dyn Fn(Event) -> ()>;
+type Handler = Box<dyn FnMut(Event) -> ()>;
 
 /// Event handlers container.
 ///
@@ -36,7 +35,7 @@ impl EventHandler {
             self.handlers.insert(event.clone(), Vec::new());
         }
 
-        self.handlers.get_mut(&event).unwrap().push(Box::new(handler));
+        self.handlers.get_mut(&event).unwrap().push(handler);
     }
 
     /// Register an event handler that responds to a key press.
@@ -48,7 +47,7 @@ impl EventHandler {
     }
 
     /// Poll an event and handle it.
-    pub fn handle(&self) {
+    pub fn handle(&mut self) {
         if poll(Duration::from_millis(0)).unwrap() {
             let event = read().unwrap();
             self.handle_event(event);
@@ -56,13 +55,13 @@ impl EventHandler {
     }
 
     /// Handle a registered event.
-    fn handle_event(&self, event: Event) {
+    fn handle_event(&mut self, event: Event) {
         if ! self.handlers.contains_key(&event) {
             return;
         }
 
-        /// TODO: use async
-        for handler in self.handlers.get(&event).unwrap().iter() {
+        // TODO: use async
+        for handler in self.handlers.get_mut(&event).unwrap().iter_mut() {
             handler(event);
         }
     }

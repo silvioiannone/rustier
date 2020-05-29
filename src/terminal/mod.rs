@@ -1,87 +1,65 @@
 //!
 //! Terminal interface.
 //!
-
-pub mod event_handler;
-
-pub use self::event_handler::EventHandler;
-
-use std::io::{stdout, Stdout, Write};
+use std::io::{stdout, Write};
 use crossterm::{event, execute, terminal, cursor};
 
-/// A terminal.
-pub struct Terminal {
-    /// Output buffer.
-    pub output: Stdout,
-    pub event_handler: EventHandler
+/// Clear the terminal.
+pub fn clear() {
+    execute!(stdout(), terminal::Clear(terminal::ClearType::All)).unwrap();
 }
 
-impl Terminal {
-    /// Init the terminal
-    pub fn init() -> Terminal {
-        Terminal {
-            output: stdout(),
-            event_handler: EventHandler::new()
-        }
-    }
+/// Flush the output buffer.
+pub fn flush() {
+    stdout().flush().unwrap();
+}
 
-    /// Clear the terminal.
-    pub fn clear(&mut self) {
-        execute!(self.output, terminal::Clear(terminal::ClearType::All)).unwrap();
-    }
+/// Enable raw mode
+pub fn enable_raw_mode() {
+    terminal::enable_raw_mode().unwrap();
+}
 
-    /// Flush the output buffer.
-    pub fn flush(&mut self) {
-        self.output.flush().unwrap();
-    }
+/// Disable raw mode.
+pub fn disable_raw_mode() {
+    terminal::disable_raw_mode().unwrap();
+}
 
-    /// Enable raw mode
-    pub fn enable_raw_mode(&mut self) {
-        terminal::enable_raw_mode().unwrap();
-    }
+/// Enable mouse support.
+pub fn enable_mouse() {
+    execute!(stdout(), event::EnableMouseCapture).unwrap();
+}
 
-    /// Disable raw mode.
-    pub fn disable_raw_mode(&mut self) {
-        terminal::disable_raw_mode().unwrap();
-    }
+/// Disable mouse support.
+pub fn disable_mouse() {
+    execute!(stdout(), event::DisableMouseCapture).unwrap();
+}
 
-    /// Enable mouse support.
-    pub fn enable_mouse(&mut self) {
-        execute!(self.output, event::EnableMouseCapture).unwrap();
-    }
+/// Enter the alternate screen.
+pub fn enter_alternate_screen() {
+    execute!(stdout(), terminal::EnterAlternateScreen).unwrap();
+}
 
-    /// Disable mouse support.
-    pub fn disable_mouse(&mut self) {
-        execute!(self.output, event::DisableMouseCapture).unwrap();
-    }
+/// Leave the alternate screen.
+pub fn leave_alternate_screen() {
+    execute!(stdout(), terminal::LeaveAlternateScreen).unwrap();
+}
 
-    /// Enter the alternate screen.
-    pub fn enter_alternate_screen(&mut self) {
-        execute!(self.output, terminal::EnterAlternateScreen).unwrap();
-    }
+/// Hide the cursor.
+pub fn hide_cursor() {
+    execute!(stdout(), cursor::Hide).unwrap();
+}
 
-    /// Leave the alternate screen.
-    pub fn leave_alternate_screen(&mut self) {
-        execute!(self.output, terminal::LeaveAlternateScreen).unwrap();
-    }
+/// Move the cursor to the given position.
+pub fn move_cursor(x: u16, y: u16) {
+    execute!(stdout(), cursor::MoveTo(x, y)).unwrap();
+}
 
-    /// Hide the cursor.
-    pub fn hide_cursor(&mut self) {
-        execute!(self.output, cursor::Hide).unwrap();
-    }
+/// Show the cursor.
+pub fn show_cursor() {
+    execute!(stdout(), cursor::Show).unwrap();
+}
 
-    /// Move the cursor to the given position.
-    pub fn move_cursor(&mut self, x: u16, y: u16) {
-        execute!(self.output, cursor::MoveTo(x, y)).unwrap();
-    }
-
-    /// Show the cursor.
-    pub fn show_cursor(&mut self) {
-        execute!(self.output, cursor::Show).unwrap();
-    }
-
-    /// Get the terminal size.
-    pub fn size() -> (u16, u16) {
-        terminal::size().unwrap()
-    }
+/// Get the terminal size.
+pub fn size() -> (u16, u16) {
+    terminal::size().unwrap()
 }

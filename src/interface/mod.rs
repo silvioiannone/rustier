@@ -13,31 +13,32 @@
 pub mod canvas;
 pub mod cell;
 pub mod coordinate;
+pub mod event_handler;
 pub mod tools;
 
 pub use self::cell::Cell;
 pub use self::canvas::Canvas;
 pub use self::coordinate::Coordinate;
+pub use self::event_handler::EventHandler;
 pub use self::tools::Tool;
 
 use crate::components::Component;
-use crate::terminal::Terminal;
-
-use std::io::Write;
+use crate::terminal;
+use std::io::{stdout, Write};
 
 /// An interface containing all the components that are displayed on the screen.
-pub struct Interface<'a> {
+pub struct Interface {
     components: Vec<Box<dyn Component>>,
-    terminal: &'a mut Terminal
+    pub event_handler: EventHandler
 }
 
 /// Interface's implementation.
-impl<'a> Interface<'a> {
+impl Interface {
     /// Create a new interface.
-    pub fn new(terminal: &'a mut Terminal) -> Self {
+    pub fn new() -> Self {
         Self {
             components: vec![],
-            terminal: terminal
+            event_handler: EventHandler::new()
         }
     }
 
@@ -50,7 +51,7 @@ impl<'a> Interface<'a> {
     /// Draw the interface.
     pub fn draw(&mut self) {
         loop {
-            self.terminal.event_handler.handle();
+            self.event_handler.handle();
             self.present();
         }
     }
@@ -65,13 +66,13 @@ impl<'a> Interface<'a> {
 
         // Copy the canvas into the terminal's buffer.
         self.reset();
-        write!(self.terminal.output, "{}", canvas).unwrap();
-        self.terminal.flush();
+        write!(stdout(), "{}", canvas).unwrap();
+        terminal::flush();
     }
 
     /// Reset and prepare for a new frame.
     fn reset(&mut self) {
-        &self.terminal.move_cursor(0, 0);
+        terminal::move_cursor(0, 0);
     }
 
     /// Create a canvas where a component can be drawn.
