@@ -23,7 +23,7 @@ pub use self::event_handler::EventHandler;
 pub use self::tools::Tool;
 
 use crate::components::Component;
-use crate::terminal;
+use crate::terminal::Terminal;
 use std::io::{stdout, Write};
 
 /// An interface containing all the components that are displayed on the screen.
@@ -67,12 +67,12 @@ impl Interface {
         // Copy the canvas into the terminal's buffer.
         self.reset();
         write!(stdout(), "{}", canvas).unwrap();
-        terminal::flush();
+        Terminal::flush();
     }
 
     /// Reset and prepare for a new frame.
     fn reset(&mut self) {
-        terminal::move_cursor(0, 0);
+        Terminal::move_cursor(0, 0);
     }
 
     /// Create a canvas where a component can be drawn.

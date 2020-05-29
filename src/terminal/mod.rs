@@ -4,62 +4,67 @@
 use std::io::{stdout, Write};
 use crossterm::{event, execute, terminal, cursor};
 
-/// Clear the terminal.
-pub fn clear() {
-    execute!(stdout(), terminal::Clear(terminal::ClearType::All)).unwrap();
-}
+pub struct Terminal;
 
-/// Flush the output buffer.
-pub fn flush() {
-    stdout().flush().unwrap();
-}
+/// Terminal.
+impl Terminal {
+    /// Clear the terminal.
+    pub fn clear() {
+        execute!(stdout(), terminal::Clear(terminal::ClearType::All)).unwrap();
+    }
 
-/// Enable raw mode
-pub fn enable_raw_mode() {
-    terminal::enable_raw_mode().unwrap();
-}
+    /// Flush the output buffer.
+    pub fn flush() {
+        stdout().flush().unwrap();
+    }
 
-/// Disable raw mode.
-pub fn disable_raw_mode() {
-    terminal::disable_raw_mode().unwrap();
-}
+    /// Enable raw mode
+    pub fn enable_raw_mode() {
+        terminal::enable_raw_mode().unwrap();
+    }
 
-/// Enable mouse support.
-pub fn enable_mouse() {
-    execute!(stdout(), event::EnableMouseCapture).unwrap();
-}
+    /// Disable raw mode.
+    pub fn disable_raw_mode() {
+        terminal::disable_raw_mode().unwrap();
+    }
 
-/// Disable mouse support.
-pub fn disable_mouse() {
-    execute!(stdout(), event::DisableMouseCapture).unwrap();
-}
+    /// Enable mouse support.
+    pub fn enable_mouse() {
+        execute!(stdout(), event::EnableMouseCapture).unwrap();
+    }
 
-/// Enter the alternate screen.
-pub fn enter_alternate_screen() {
-    execute!(stdout(), terminal::EnterAlternateScreen).unwrap();
-}
+    /// Disable mouse support.
+    pub fn disable_mouse() {
+        execute!(stdout(), event::DisableMouseCapture).unwrap();
+    }
 
-/// Leave the alternate screen.
-pub fn leave_alternate_screen() {
-    execute!(stdout(), terminal::LeaveAlternateScreen).unwrap();
-}
+    /// Enter the alternate screen.
+    pub fn enter_alternate_screen() {
+        execute!(stdout(), terminal::EnterAlternateScreen).unwrap();
+    }
 
-/// Hide the cursor.
-pub fn hide_cursor() {
-    execute!(stdout(), cursor::Hide).unwrap();
-}
+    /// Leave the alternate screen.
+    pub fn leave_alternate_screen() {
+        execute!(stdout(), terminal::LeaveAlternateScreen).unwrap();
+    }
 
-/// Move the cursor to the given position.
-pub fn move_cursor(x: u16, y: u16) {
-    execute!(stdout(), cursor::MoveTo(x, y)).unwrap();
-}
+    /// Hide the cursor.
+    pub fn hide_cursor() {
+        execute!(stdout(), cursor::Hide).unwrap();
+    }
 
-/// Show the cursor.
-pub fn show_cursor() {
-    execute!(stdout(), cursor::Show).unwrap();
-}
+    /// Move the cursor to the given position.
+    pub fn move_cursor(x: u16, y: u16) {
+        execute!(stdout(), cursor::MoveTo(x, y)).unwrap();
+    }
 
-/// Get the terminal size.
-pub fn size() -> (u16, u16) {
-    terminal::size().unwrap()
+    /// Show the cursor.
+    pub fn show_cursor() {
+        execute!(stdout(), cursor::Show).unwrap();
+    }
+
+    /// Get the terminal size.
+    pub fn size() -> (u16, u16) {
+        terminal::size().unwrap()
+    }
 }

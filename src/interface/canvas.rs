@@ -8,7 +8,7 @@ use std::fmt::{Write, Display, Formatter};
 use crate::interface::Cell;
 use crate::interface::Coordinate;
 use crate::interface::tools::{Line, Tool, Rectangle, Text};
-use crate::terminal;
+use crate::terminal::Terminal;
 
 /// A canvas is where a component is allowed to be displayed.
 #[derive(Debug)]
@@ -104,7 +104,7 @@ impl Canvas {
 impl Default for Canvas {
     // Create a canvas with default values.
     fn default() -> Self {
-        let size = terminal::size();
+        let size = Terminal::size();
         Self::new(size.0, size.1)
     }
 }

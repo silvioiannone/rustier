@@ -2,11 +2,11 @@
 //! Event handler.
 //!
 use crossterm::event::{poll, read, Event, KeyCode, KeyEvent, KeyModifiers};
-use std::time::Duration;
 use std::collections::HashMap;
+use std::time::Duration;
 
 /// A handler function.
-type Handler = Box<dyn FnMut(Event) -> ()>;
+type Handler = Box<dyn FnMut(Event) ->()>;
 
 /// Event handlers container.
 ///
