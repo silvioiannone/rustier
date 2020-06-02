@@ -17,3 +17,4 @@ pub trait Component {
     /// Draw the component.
     fn draw<'a>(&self, canvas: &'a mut Canvas) -> &'a Canvas;
 }
+

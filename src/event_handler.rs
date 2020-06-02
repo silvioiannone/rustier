@@ -1,12 +1,14 @@
 //!
 //! Event handler.
 //!
-use crossterm::event::{poll, read, Event, KeyCode, KeyEvent, KeyModifiers};
+use crossterm::event::{
+    self, Event, KeyCode, KeyEvent, KeyModifiers
+};
 use std::collections::HashMap;
 use std::time::Duration;
 
 /// A handler function.
-type Handler = Box<dyn FnMut(Event) ->()>;
+type Handler = Box<dyn FnMut(Event) + Send>;
 
 /// Event handlers container.
 ///
@@ -24,6 +26,8 @@ impl EventHandler {
 
     /// Create a new event handler.
     pub fn new() -> EventHandler {
+        let (sender, receiver) = crossbeam_channel::unbounded();
+
         EventHandler {
             handlers: HashMap::new()
         }
@@ -48,9 +52,12 @@ impl EventHandler {
 
     /// Poll an event and handle it.
     pub fn handle(&mut self) {
-        if poll(Duration::from_millis(0)).unwrap() {
-            let event = read().unwrap();
-            self.handle_event(event);
+        match event::poll(Duration::from_millis(1)) {
+            Ok(true) => match event::read() {
+                Ok(event) => self.handle_event(event),
+                Err(e) => panic!("{:?}", e),
+            }
+            _ => ()
         }
     }
 

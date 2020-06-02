@@ -4,7 +4,8 @@ use crate::interface::coordinate::Coordinate;
 
 /// A panel component.
 pub struct AppFrame {
-    title: String
+    children: Vec<Box<dyn Component>>,
+    title: String,
 }
 
 impl AppFrame {
@@ -13,13 +14,20 @@ impl AppFrame {
         self.title = title;
         self
     }
+
+    /// Insert a component inside the app frame.
+    pub fn insert(mut self, component: Box<dyn Component>) -> Self {
+        self.children.push(component);
+        self
+    }
 }
 
 impl Default for AppFrame {
     /// Create a new panel.
     fn default() -> AppFrame {
         AppFrame {
-            title: "App name".to_string()
+            children: vec![],
+            title: "App name".to_string(),
         }
     }
 }

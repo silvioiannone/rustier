@@ -13,13 +13,11 @@
 pub mod canvas;
 pub mod cell;
 pub mod coordinate;
-pub mod event_handler;
 pub mod tools;
 
 pub use self::cell::Cell;
 pub use self::canvas::Canvas;
 pub use self::coordinate::Coordinate;
-pub use self::event_handler::EventHandler;
 pub use self::tools::Tool;
 
 use crate::components::Component;
@@ -28,8 +26,7 @@ use std::io::{stdout, Write};
 
 /// An interface containing all the components that are displayed on the screen.
 pub struct Interface {
-    components: Vec<Box<dyn Component>>,
-    pub event_handler: EventHandler
+    components: Vec<Box<dyn Component>>
 }
 
 /// Interface's implementation.
@@ -37,8 +34,7 @@ impl Interface {
     /// Create a new interface.
     pub fn new() -> Self {
         Self {
-            components: vec![],
-            event_handler: EventHandler::new()
+            components: vec![]
         }
     }
 
@@ -48,16 +44,8 @@ impl Interface {
         self
     }
 
-    /// Draw the interface.
-    pub fn draw(&mut self) {
-        loop {
-            self.event_handler.handle();
-            self.present();
-        }
-    }
-
     /// Present the canvas on the screen.
-    fn present(&mut self) {
+    pub fn present(&mut self) {
         let canvas = &mut self.make_canvas();
 
         for component in self.components.iter() {
